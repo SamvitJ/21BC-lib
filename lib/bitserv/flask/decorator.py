@@ -84,6 +84,8 @@ class Payment:
                     payment_headers = {}
                     for method in self.allowed_methods:
                         payment_headers.update(method.get_402_headers(_price, **kwargs))
+                    del kwargs['server_url']
+                    payment_headers.update(kwargs)
                     raise PaymentRequiredException(payment_headers)
             return _fn
         return decorator
