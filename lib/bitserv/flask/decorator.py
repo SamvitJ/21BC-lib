@@ -4,6 +4,7 @@ from functools import wraps
 from urllib.parse import urlparse
 from flask import jsonify, request, views
 from werkzeug.exceptions import HTTPException, BadRequest, NotFound
+from random import randint
 
 from ..payment_methods import OnChain, PaymentChannel, BitTransfer
 from ..payment_server import PaymentServer, PaymentChannelNotFoundError
@@ -86,6 +87,7 @@ class Payment:
                         payment_headers.update(method.get_402_headers(_price, **kwargs))
                     del kwargs['server_url']
                     payment_headers.update(kwargs)
+                    payment_headers.update({"scheme_id": randint(int(1.0e8), int(1.0e9))})
                     raise PaymentRequiredException(payment_headers)
             return _fn
         return decorator
